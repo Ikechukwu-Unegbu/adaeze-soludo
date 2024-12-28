@@ -11,6 +11,7 @@ Route::get('/products', [ProductController::class, 'index'])->name('product.inde
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
 Route::get('cart/{productId}', [CartController::class, 'store'])->name('cart.store');
+Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

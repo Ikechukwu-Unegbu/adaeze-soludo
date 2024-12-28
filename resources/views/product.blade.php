@@ -56,7 +56,7 @@
                         <a href="{{route('cart.store', $product->id)}}" id="add-to-cart" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">
                             Add to Cart
                         </a>
-                        <a href="cart.html" class="ml-4 bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-gray-600">
+                        <a href="{{route('cart.index')}}" class="ml-4 bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-gray-600">
                             View Cart
                         </a>
                     </div>

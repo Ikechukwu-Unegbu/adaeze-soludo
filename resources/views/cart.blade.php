@@ -35,47 +35,37 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Your Cart</h2>
 
             <div class="space-y-6">
-                <!-- Cart Item 1 -->
-                <div class="flex items-center justify-between border-b pb-4">
-                    <div class="flex items-center space-x-4">
-                        <img src="https://via.placeholder.com/80" alt="Product Image" class="w-20 h-20 object-cover rounded">
+                @forelse($products as $product)
+                    <div class="flex items-center justify-between border-b pb-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="{{ $product->image_url ?? 'https://via.placeholder.com/80' }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover rounded">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h3>
+                                <p class="text-gray-600">Price: NGN {{ number_format($product->price, 2) }}</p>
+                            </div>
+                        </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-800">Adventure Backpack</h3>
-                            <p class="text-gray-600">Price: $79.99</p>
+                            <input type="number" value="{{ $cart[$product->id] }}" min="1" class="w-16 text-center border rounded-md text-gray-800">
+                            <button class="ml-4 text-red-500 hover:text-red-600">Remove</button>
                         </div>
                     </div>
-                    <div>
-                        <input type="number" value="1" class="w-16 text-center border rounded-md text-gray-800">
-                        <button class="ml-4 text-red-500 hover:text-red-600">Remove</button>
-                    </div>
-                </div>
-
-                <!-- Cart Item 2 -->
-                <div class="flex items-center justify-between border-b pb-4">
-                    <div class="flex items-center space-x-4">
-                        <img src="https://via.placeholder.com/80" alt="Product Image" class="w-20 h-20 object-cover rounded">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">Urban Backpack</h3>
-                            <p class="text-gray-600">Price: $69.99</p>
-                        </div>
-                    </div>
-                    <div>
-                        <input type="number" value="1" class="w-16 text-center border rounded-md text-gray-800">
-                        <button class="ml-4 text-red-500 hover:text-red-600">Remove</button>
-                    </div>
-                </div>
+                @empty
+                    <p class="text-gray-600">Your cart is empty.</p>
+                @endforelse
             </div>
 
-            <!-- Total Section -->
-            <div class="mt-8 border-t pt-4">
-                <div class="flex justify-between text-lg font-semibold text-gray-800">
-                    <p>Total</p>
-                    <p>$149.98</p>
+            @if($products->isNotEmpty())
+                <!-- Total Section -->
+                <div class="mt-8 border-t pt-4">
+                    <div class="flex justify-between text-lg font-semibold text-gray-800">
+                        <p>Total</p>
+                        <p>NGN {{ number_format($products->sum(fn($product) => $product->price * $cart[$product->id]), 2) }}</p>
+                    </div>
+                    <button class="mt-6 w-full bg-blue-500 text-white py-3 rounded-lg shadow-lg hover:bg-blue-600">
+                        Proceed to Checkout
+                    </button>
                 </div>
-                <button class="mt-6 w-full bg-blue-500 text-white py-3 rounded-lg shadow-lg hover:bg-blue-600">
-                    Proceed to Checkout
-                </button>
-            </div>
+            @endif
         </div>
     </main>
 
