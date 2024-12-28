@@ -32,6 +32,17 @@
 
     <main class="py-16 px-4">
         <div class="container mx-auto max-w-4xl bg-white shadow-lg rounded-lg p-6">
+        <div class="fixed top-5 right-5 z-50">
+    @if (session('success'))
+        <div class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md shadow-lg flex items-center space-x-2">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+</div>
+
             <div class="flex flex-col md:flex-row md:space-x-6">
                 <div class="flex-shrink-0">
                     <img src="{{$product->image_path? $product->image_path: 'https://via.placeholder.com/300'}}" alt="Product Image" class="w-full md:w-64 h-64 object-cover rounded">
@@ -42,7 +53,7 @@
                     <p class="text-xl font-semibold text-blue-500 mt-4">Price: NGN {{$product->price}}</p>
 
                     <div class="mt-6">
-                        <a href="" id="add-to-cart" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">
+                        <a href="{{route('cart.store', $product->id)}}" id="add-to-cart" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">
                             Add to Cart
                         </a>
                         <a href="cart.html" class="ml-4 bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-gray-600">
@@ -68,10 +79,7 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-        const addToCartBtn = document.getElementById('add-to-cart');
-        addToCartBtn.addEventListener('click', () => {
-            alert('Product added to cart!');
-        });
+       
     </script>
 </body>
 </html>
