@@ -34,4 +34,9 @@ class CartController extends Controller
 
         return view('cart', compact('products', 'cart'));
     }
+
+    public function processCheckout()
+    {
+        
+    }
 }

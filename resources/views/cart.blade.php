@@ -36,19 +36,32 @@
 
             <div class="space-y-6">
                 @forelse($products as $product)
-                    <div class="flex items-center justify-between border-b pb-4">
-                        <div class="flex items-center space-x-4">
-                            <img src="{{ $product->image_url ?? 'https://via.placeholder.com/80' }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover rounded">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h3>
-                                <p class="text-gray-600">Price: NGN {{ number_format($product->price, 2) }}</p>
-                            </div>
-                        </div>
+                <div class="flex items-center justify-between border-b pb-4">
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ $product->image_url ?? 'https://via.placeholder.com/80' }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover rounded">
                         <div>
-                            <input type="number" value="{{ $cart[$product->id] }}" min="1" class="w-16 text-center border rounded-md text-gray-800">
-                            <button class="ml-4 text-red-500 hover:text-red-600">Remove</button>
+                            <h3 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h3>
+                            <p class="text-gray-600">Price: NGN {{ number_format($product->price, 2) }}</p>
                         </div>
                     </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="decrement-btn text-gray-800 border px-2 py-1 rounded-md" 
+                                data-product-id="{{ $product->id }}" 
+                                data-price="{{ $product->price }}">-</button>
+                        <input type="text" 
+                               value="{{ $cart[$product->id] }}" 
+                               min="1" 
+                               class="quantity-input w-16 text-center border rounded-md text-gray-800" 
+                               data-product-id="{{ $product->id }}" 
+                               data-price="{{ $product->price }}"
+                               readonly>
+                        <button class="increment-btn text-gray-800 border px-2 py-1 rounded-md" 
+                                data-product-id="{{ $product->id }}" 
+                                data-price="{{ $product->price }}">+</button>
+                        <button class="ml-4 text-red-500 hover:text-red-600">Remove</button>
+                    </div>
+                </div>
+                
                 @empty
                     <p class="text-gray-600">Your cart is empty.</p>
                 @endforelse
@@ -76,12 +89,57 @@
     </footer>
 
     <script>
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+        // const menuBtn = document.getElementById('menu-btn');
+        // const mobileMenu = document.getElementById('mobile-menu');
 
-        menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        // menuBtn.addEventListener('click', () => {
+        //     mobileMenu.classList.toggle('hidden');
+        // });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        const incrementButtons = document.querySelectorAll('.increment-btn');
+        const decrementButtons = document.querySelectorAll('.decrement-btn');
+        const totalElement = document.querySelector('div.flex.justify-between.text-lg.font-semibold.text-gray-800 p:last-child');
+
+        // Function to calculate the total
+        const calculateTotal = () => {
+            let total = 0;
+            quantityInputs.forEach(input => {
+                const price = parseFloat(input.dataset.price);
+                const quantity = parseInt(input.value, 10) || 0;
+                total += price * quantity;
+            });
+            totalElement.textContent = `NGN ${total.toFixed(2)}`;
+        };
+
+        // Event listener for increment buttons
+        incrementButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.dataset.productId;
+                const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
+                input.value = parseInt(input.value, 10) + 1;
+                calculateTotal();
+            });
         });
+
+        // Event listener for decrement buttons
+        decrementButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.dataset.productId;
+                const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
+                if (parseInt(input.value, 10) > 1) {
+                    input.value = parseInt(input.value, 10) - 1;
+                    calculateTotal();
+                }
+            });
+        });
+
+        // Update total on page load
+        calculateTotal();
+    });
+</script>
+
     </script>
 </body>
 </html>
