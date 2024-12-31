@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
@@ -29,9 +30,26 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        
-    }
+        // Validate the incoming request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'image_url' => 'nullable|url', // Ensure the image URL is valid
+        ]);
 
+        // Create a new product
+        $product = Product::create([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'image_path' => $request->input('image_url'), // Store the image URL
+        ]);
+
+        // Redirect with success message
+        return redirect()->back()
+            ->with('success', 'Product created successfully!');
+    }
     /**
      * Display the specified resource.
      */
@@ -62,6 +80,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Product::find($id)->delete();
+        Session::flash('success', 'Deleted.');
+        return redirect()->back();
     }
 }
