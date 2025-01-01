@@ -19,4 +19,9 @@ class OrderItem extends Model
            $model->uuid = $uuid;
         });
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

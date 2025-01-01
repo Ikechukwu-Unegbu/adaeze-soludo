@@ -34,56 +34,67 @@
         <div class="container mx-auto max-w-4xl bg-white shadow-lg rounded-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Your Cart</h2>
 
-            <div class="space-y-6">
-                @forelse($products as $product)
-                <div class="flex items-center justify-between border-b pb-4">
-                    <div class="flex items-center space-x-4">
-                        <img src="{{ $product->image_url ?? 'https://via.placeholder.com/80' }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover rounded">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h3>
-                            <p class="text-gray-600">Price: NGN {{ number_format($product->price, 2) }}</p>
+            <form action="{{ route('checkout.index') }}" method="POST">
+            @csrf
+                <div class="space-y-6">
+                    @forelse($products as $product)
+                    <div class="flex items-center justify-between border-b pb-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="{{ $product->image_url ?? 'https://via.placeholder.com/80' }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover rounded">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h3>
+                                <p class="text-gray-600">Price: NGN {{ number_format($product->price, 2) }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <a href="javasript:void(0)" class="decrement-btn text-gray-800 border px-2 py-1 rounded-md" 
+                                    data-product-id="{{ $product->id }}" 
+                                    data-price="{{ $product->price }}">-</a>
+                            <input type="text" 
+                                type="text" 
+                                name="quantities[{{ $product->id }}]" 
+                                value="{{ $cart[$product->id] }}" 
+                                min="1" 
+                                class="quantity-input w-16 text-center border rounded-md text-gray-800" 
+                                data-product-id="{{ $product->id }}" 
+                                data-price="{{ $product->price }}" 
+                                readonly
+                            >
+                            <a href="javasript:void(0)"  class="increment-btn text-gray-800 border px-2 py-1 rounded-md" 
+                                    data-product-id="{{ $product->id }}" 
+                                    data-price="{{ $product->price }}">+</a>
+                            <button type="button" 
+                                    class="ml-4 text-red-500 hover:text-red-600 remove-item-btn" 
+                                    data-product-id="{{ $product->id }}" 
+                                    data-product-name="{{ $product->name }}">
+                                Remove
+                            </button>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <button class="decrement-btn text-gray-800 border px-2 py-1 rounded-md" 
-                                data-product-id="{{ $product->id }}" 
-                                data-price="{{ $product->price }}">-</button>
-                        <input type="text" 
-                               value="{{ $cart[$product->id] }}" 
-                               min="1" 
-                               class="quantity-input w-16 text-center border rounded-md text-gray-800" 
-                               data-product-id="{{ $product->id }}" 
-                               data-price="{{ $product->price }}"
-                               readonly>
-                        <button class="increment-btn text-gray-800 border px-2 py-1 rounded-md" 
-                                data-product-id="{{ $product->id }}" 
-                                data-price="{{ $product->price }}">+</button>
-                        <button class="ml-4 text-red-500 hover:text-red-600"
-                            onclick="if(!confirm('Are you sure you want to remove this item: {{ $product->name }}'))return;document.getElementById('handleCardDel-{{ $product->id }}').submit()"
-                        >
-                            Remove
-                            <form id="handleCardDel-{{ $product->id }}" action="{{ route('cart.delete', $product->id) }}" class="hidden" method="POST">@csrf</form>
+                    
+                    @empty
+                        <p class="text-gray-600">Your cart is empty.</p>
+                    @endforelse
+                </div>
+
+                @if($products->isNotEmpty())
+                    <!-- Total Section -->
+                    <div class="mt-8 border-t pt-4">
+                        <div class="flex justify-between text-lg font-semibold text-gray-800">
+                            <p>Total</p>
+                            <p>NGN {{ number_format($products->sum(fn($product) => $product->price * $cart[$product->id]), 2) }}</p>
+                        </div>
+                        <button type="submit" class="mt-6 w-full bg-blue-500 text-white py-3 rounded-lg shadow-lg hover:bg-blue-600">
+                            Proceed to Checkout
                         </button>
                     </div>
-                </div>
-                
-                @empty
-                    <p class="text-gray-600">Your cart is empty.</p>
-                @endforelse
-            </div>
+                @endif
+            </form>
 
-            @if($products->isNotEmpty())
-                <!-- Total Section -->
-                <div class="mt-8 border-t pt-4">
-                    <div class="flex justify-between text-lg font-semibold text-gray-800">
-                        <p>Total</p>
-                        <p>NGN {{ number_format($products->sum(fn($product) => $product->price * $cart[$product->id]), 2) }}</p>
-                    </div>
-                    <button class="mt-6 w-full bg-blue-500 text-white py-3 rounded-lg shadow-lg hover:bg-blue-600">
-                        Proceed to Checkout
-                    </button>
-                </div>
-            @endif
+            <form id="remove-item-form" action="" method="POST" style="display: none;">
+                @csrf
+                @method('DELETE')
+            </form>
         </div>
     </main>
 
@@ -151,7 +162,26 @@
         calculateTotal();
     });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const removeButtons = document.querySelectorAll('.remove-item-btn');
+    const removeForm = document.getElementById('remove-item-form');
 
-    </script>
+    removeButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const productId = button.getAttribute('data-product-id');
+            const productName = button.getAttribute('data-product-name');
+            const confirmed = confirm(`Are you sure you want to remove this item: ${productName}?`);
+
+            if (confirmed) {
+                const baseUrl = "{{ route('cart.delete', ':id') }}"
+                const routeUrl = baseUrl.replace(':id', productId);
+                removeForm.action = routeUrl;
+                removeForm.submit();
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>

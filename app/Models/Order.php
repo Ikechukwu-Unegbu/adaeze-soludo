@@ -21,4 +21,14 @@ class Order extends Model
            $model->uuid = $uuid;
         });
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

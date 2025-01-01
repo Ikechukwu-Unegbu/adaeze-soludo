@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -15,10 +16,11 @@ Route::get('/product/{id}/destroy', [ProductController::class, 'destroy'])->name
 
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('cart/{productId}', [CartController::class, 'store'])->name('cart.store');
-Route::post('cart/{productId}', [CartController::class, 'destroy'])->name('cart.delete');
+Route::delete('cart/{productId}/delete', [CartController::class, 'destroy'])->name('cart.delete');
 
 Route::middleware('auth')->group(function () {
-    Route::get('checkout')->name('checkout.index');
+    Route::post('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::get('checkout/verify-payment', [CheckoutController::class, 'verifyPayment'])->name('checkout.verify-payment');
 });
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

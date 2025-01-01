@@ -23,13 +23,24 @@ class PayStackTransaction extends Model
         });
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     private static function generateUniqueTransactionId(): string
     {
         $code = 'ADAEZA';
         $transactionNumber = Auth::id();
         $timestamp = date('YmdHis');
-        $randomDigits = Str::upper(Str::random(6));
+        $randomDigits = Str::upper(Str::random(10));
 
-        return "{$code}|{$transactionNumber}|{$timestamp}|{$randomDigits}";
+        return "{$code}_{$transactionNumber}_{$timestamp}_{$randomDigits}";
+    }
+
+    public function successful()
+    {
+        $this->status = true;
+        $this->save();
     }
 }

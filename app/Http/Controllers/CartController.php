@@ -41,14 +41,9 @@ class CartController extends Controller
         if (isset($cart[$productId])) {
             unset($cart[$productId]);
         }
-        
+
         Session::put('cart', $cart);
         
         return redirect()->back()->with('success', 'Product removed from cart successfully');
-    }
-
-    public function processCheckout()
-    {
-
     }
 }
