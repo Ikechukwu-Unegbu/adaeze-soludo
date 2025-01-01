@@ -13,14 +13,14 @@
                     @include('message')
                 <!-- creation -->
                 <!-- Button to Open Modal -->
-<div class="flex justify-end mb-4">
+{{-- <div class="flex justify-end mb-4">
   <button
     class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
     onclick="openModal()"
   >
     Create New Product
   </button>
-</div>
+</div> --}}
 
 <!-- Modal Background -->
 <div
@@ -142,10 +142,45 @@
                 <!-- end creation -->
                 <!-- product management -->
                 <div class="container mx-auto mt-10 px-4">
-                    <h2 class="text-2xl font-bold mb-6 text-gray-800">Product Management</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {{-- <h2 class="text-2xl font-bold mb-6 text-gray-800">Product Management</h2> --}}
+                    <div class="">
+
+                      <div class="overflow-x-auto">
+                        <table id="ordersTable" class="table-auto border-collapse border border-gray-200 w-full">
+                          <thead>
+                            <tr class="bg-gray-100">
+                              <th class="border border-gray-300 px-4 py-2 text-left">SN</th>
+                              <th class="border border-gray-300 px-4 py-2 text-left">Order ID</th>
+                              <th class="border border-gray-300 px-4 py-2 text-left">Items</th>
+                              <th class="border border-gray-300 px-4 py-2 text-left">Quantity</th>
+                              <th class="border border-gray-300 px-4 py-2 text-left">Total Price</th>
+                              <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
+                              {{-- <th class="border border-gray-300 px-4 py-2 text-left">Actions</th> --}}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @foreach ($orders as $order)
+                              <tr>
+                                <td class="border border-gray-300 px-4 py-2">{{ $loop->index+1 }}</td>
+                                <td class="border border-gray-300 px-4 py-2">{{ $order->order_id }}</td>
+                                <td class="border border-gray-300 px-4 py-2">{{ $order->order_items_count }}</td>
+                                <td class="border border-gray-300 px-4 py-2">{{ $order->orderItems->sum('quantity') }}</td>
+                                <td class="border border-gray-300 px-4 py-2">NGN {{ number_format($order->orderItems->sum('amount'), 2) }}</td>
+                                <td class="border border-gray-300 px-4 py-2 text-{{ $order->payment->status ? 'green' : 'red' }}-600">
+                                  {{ $order->payment->status ? 'Completed' : 'Failed' }}
+                                </td>
+                                {{-- <td class="border border-gray-300 px-4 py-2">
+                                  <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</button>
+                                </td> --}}
+                              </tr>
+                            @endforeach
+                          </tbody>
+                        </table>
+                      </div>
+                      
+
                         <!-- Product Card -->
-                       @foreach($products as $product)
+                       {{-- @foreach($products as $product)
                        <div class="bg-white border rounded-lg shadow-lg overflow-hidden">
                         <img src="{{$product->image_path}}" alt="Product A" class="w-full h-48 object-cover">
                         <div class="p-4">
@@ -159,7 +194,7 @@
                         </div>
                         </div>
 
-                       @endforeach 
+                       @endforeach  --}}
                        
 
                         <!-- Add more cards as needed -->
@@ -171,4 +206,32 @@
             </div>
         </div>
     </div>
+    @push('styles')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">    
+    @endpush
+    @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>  
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        $('#ordersTable').DataTable({
+          responsive: true,
+          paging: true,
+          searching: true,
+          ordering: true,
+          language: {
+            search: "Search orders:",
+            lengthMenu: "Show _MENU_ entries",
+            info: "Showing _START_ to _END_ of _TOTAL_ orders",
+            paginate: {
+              previous: "Prev",
+              next: "Next",
+            },
+          },
+        });
+      });
+    </script>
+    
+    @endpush
 </x-app-layout>

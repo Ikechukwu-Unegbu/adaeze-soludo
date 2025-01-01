@@ -83,6 +83,7 @@ class PayStackService
         $order = OrderService::createOrder();
     
         return PayStackTransaction::create([
+            'reference_id'  => $order->order_id,
             'user_id'       => $order->user_id,
             'order_id'      => $order->id,
             'amount'        => $order->orderItems->sum('amount'),
