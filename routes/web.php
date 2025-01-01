@@ -13,9 +13,13 @@ Route::post('/products', [ProductController::class, 'store'])->name('product.sto
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/product/{id}/destroy', [ProductController::class, 'destroy'])->name('product.destroy');
 
-Route::get('cart/{productId}', [CartController::class, 'store'])->name('cart.store');
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('cart/{productId}', [CartController::class, 'store'])->name('cart.store');
+Route::post('cart/{productId}', [CartController::class, 'destroy'])->name('cart.delete');
 
+Route::middleware('auth')->group(function () {
+    Route::get('checkout')->name('checkout.index');
+});
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

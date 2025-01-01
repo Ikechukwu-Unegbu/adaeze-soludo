@@ -35,8 +35,20 @@ class CartController extends Controller
         return view('cart', compact('products', 'cart'));
     }
 
+    public function destroy($productId)
+    {
+        $cart = Session::get('cart', []);
+        if (isset($cart[$productId])) {
+            unset($cart[$productId]);
+        }
+        
+        Session::put('cart', $cart);
+        
+        return redirect()->back()->with('success', 'Product removed from cart successfully');
+    }
+
     public function processCheckout()
     {
-        
+
     }
 }

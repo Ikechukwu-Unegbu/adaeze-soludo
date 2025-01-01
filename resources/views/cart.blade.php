@@ -12,9 +12,9 @@
             <h1 class="text-2xl font-bold text-gray-800">Backpack Co.</h1>
             <nav>
                 <ul class="hidden md:flex space-x-6 text-gray-600">
-                    <li><a href="index.html" class="hover:text-gray-800">Home</a></li>
-                    <li><a href="products.html" class="hover:text-gray-800">Products</a></li>
-                    <li><a href="contact.html" class="hover:text-gray-800">Contact</a></li>
+                    <li><a href="/" class="hover:text-gray-800">Home</a></li>
+                    <li><a href="{{ route('product.index') }}" class="hover:text-gray-800">Products</a></li>
+                    <li><a href="#" class="hover:text-gray-800">Contact</a></li>
                 </ul>
                 <button id="menu-btn" class="block md:hidden text-gray-800">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
@@ -58,7 +58,12 @@
                         <button class="increment-btn text-gray-800 border px-2 py-1 rounded-md" 
                                 data-product-id="{{ $product->id }}" 
                                 data-price="{{ $product->price }}">+</button>
-                        <button class="ml-4 text-red-500 hover:text-red-600">Remove</button>
+                        <button class="ml-4 text-red-500 hover:text-red-600"
+                            onclick="if(!confirm('Are you sure you want to remove this item: {{ $product->name }}'))return;document.getElementById('handleCardDel-{{ $product->id }}').submit()"
+                        >
+                            Remove
+                            <form id="handleCardDel-{{ $product->id }}" action="{{ route('cart.delete', $product->id) }}" class="hidden" method="POST">@csrf</form>
+                        </button>
                     </div>
                 </div>
                 
@@ -110,7 +115,7 @@
                 const quantity = parseInt(input.value, 10) || 0;
                 total += price * quantity;
             });
-            totalElement.textContent = `NGN ${total.toFixed(2)}`;
+            totalElement.textContent = `NGN ${formatNumber(total.toFixed(2))}`;
         };
 
         // Event listener for increment buttons
@@ -134,6 +139,13 @@
                 }
             });
         });
+
+        function formatNumber(number) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }).format(number);
+        }
 
         // Update total on page load
         calculateTotal();
