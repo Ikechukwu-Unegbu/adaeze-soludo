@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,8 @@ Route::prefix('checkout')->as('checkout.')->group(function () {
     Route::get('/summary/{order:uuid}', [CheckoutController::class, 'summary'])->name('summary');
 });
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/order', [OrderController::class, 'index'])->middleware(['auth', 'verified'])->name('order.index');
+Route::get('/order/{order:uuid}/show', [OrderController::class, 'show'])->middleware(['auth', 'verified'])->name('order.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

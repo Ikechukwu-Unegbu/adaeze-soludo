@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Order extends Model
 {
@@ -36,6 +37,13 @@ class Order extends Model
     public function payment()
     {
         return $this->belongsTo(PayStackTransaction::class, 'id', 'order_id');
+    }
+
+    public function getOrderLogoAttribute()
+    {
+        if ($this->logo && Storage::disk('logos')->exists($this->logo)) {
+            return Storage::disk('logos')->url($this->logo);
+        }
     }
 
     private static function generateUniqueTransactionId(): string

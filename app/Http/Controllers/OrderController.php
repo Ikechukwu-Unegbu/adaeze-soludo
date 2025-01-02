@@ -12,4 +12,9 @@ class OrderController extends Controller
         $orders = Order::withCount('orderItems')->with(['payment', 'orderItems'])->latest()->get();
         return view('order')->with('orders', $orders);
     }
+
+    public function show(Order $order)
+    {
+        return view('order-details')->with('order', $order);
+    }
 }

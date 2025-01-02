@@ -26,11 +26,12 @@
                                         <tr class="bg-gray-100">
                                             <th class="border border-gray-300 px-4 py-2 text-left">SN</th>
                                             <th class="border border-gray-300 px-4 py-2 text-left">Order ID</th>
+                                            <th class="border border-gray-300 px-4 py-2 text-left">Date</th>
                                             <th class="border border-gray-300 px-4 py-2 text-left">Items</th>
                                             <th class="border border-gray-300 px-4 py-2 text-left">Quantity</th>
                                             <th class="border border-gray-300 px-4 py-2 text-left">Total Price</th>
                                             <th class="border border-gray-300 px-4 py-2 text-left">Status</th>
-                                            {{-- <th class="border border-gray-300 px-4 py-2 text-left">Actions</th> --}}
+                                            <th class="border border-gray-300 px-4 py-2 text-left">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -38,6 +39,7 @@
                                             <tr>
                                                 <td class="border border-gray-300 px-4 py-2">{{ $loop->index + 1 }}</td>
                                                 <td class="border border-gray-300 px-4 py-2">{{ $order->order_id }}</td>
+                                                <td class="border border-gray-300 px-4 py-2">{{ $order->created_at->format('M d, Y') }}</td>
                                                 <td class="border border-gray-300 px-4 py-2">
                                                     {{ $order->order_items_count }}</td>
                                                 <td class="border border-gray-300 px-4 py-2">
@@ -48,9 +50,9 @@
                                                     class="border border-gray-300 px-4 py-2 text-{{ $order->payment->status ? 'green' : 'red' }}-600">
                                                     {{ $order->payment->status ? 'Completed' : 'Failed' }}
                                                 </td>
-                                                {{-- <td class="border border-gray-300 px-4 py-2">
-                                                    <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</button>
-                                                </td> --}}
+                                                <td class="border border-gray-300 px-4 py-2">
+                                                    <a href="{{ route('order.show', $order->uuid) }}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

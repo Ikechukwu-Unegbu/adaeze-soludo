@@ -90,7 +90,14 @@
                             NGN{{ number_format($order->orderItems->sum('amount', 2)) }}</p>
                     </div>
                 </div>
-
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Custom Logo: {{ $order->custom_logo ? 'Yes' : 'No' }}</h3>
+                    @if ($order->logo)
+                    <a class="mt-4" href="{{ $order->orderLogo }}" target="_blank">
+                        <img src="{{ $order->orderLogo }}" width="300" alt="logo">
+                    </a>
+                    @endif
+                </div>
                 <!-- Address Section -->
                 <div class="mt-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Shipping Address</h3>
