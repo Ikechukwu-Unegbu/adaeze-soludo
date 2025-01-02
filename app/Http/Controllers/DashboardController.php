@@ -11,9 +11,6 @@ class DashboardController extends Controller
     public function index()
     {
         $products = Product::paginate(20);
-        // $orders = Order::withCount('orderItems')->with(['payment', 'orderItems'])->latest()->get();
-        return view('dashboard', [
-            'products' =>  $products
-        ]);
+        return view('dashboard')->with('products', $products);
     }
 }
