@@ -40,7 +40,7 @@
                     @forelse($products as $product)
                     <div class="flex items-center justify-between border-b pb-4">
                         <div class="flex items-center space-x-4">
-                            <img src="{{ $product->image_url ?? 'https://via.placeholder.com/80' }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover rounded">
+                            <img src="{{ $product->image_path ?? 'https://via.placeholder.com/80' }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover rounded">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h3>
                                 <p class="text-gray-600">Price: NGN {{ number_format($product->price, 2) }}</p>
