@@ -34,7 +34,7 @@
         <div class="container mx-auto max-w-4xl bg-white shadow-lg rounded-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Your Cart</h2>
 
-            <form action="{{ route('checkout.index') }}" method="POST">
+            <form action="{{ route('checkout.store') }}" method="POST">
             @csrf
                 <div class="space-y-6">
                     @forelse($products as $product)

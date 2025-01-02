@@ -12,14 +12,14 @@ use Illuminate\Support\Str;
 
 class PayStackService 
 {
-    public static function initializePayment()
+    public static function initializePayment($data)
     {
         try {
 
-            return DB::transaction(function() {               
+            return DB::transaction(function() use ($data) {               
 
-                $transaction = self::initializeTransaction();
-
+                $transaction = self::initializeTransaction($data);
+              
                 $response = Http::withHeaders([
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer ' . config('paystack.secret_key'),
@@ -27,7 +27,7 @@ class PayStackService
                     'reference'     =>  $transaction->reference_id,
                     'amount'        =>  intval($transaction->amount * 100),
                     'currency'      =>  $transaction->currency,
-                    'email'         =>  $transaction->user->email,
+                    'email'         =>  $transaction->order->email,
                     'callback_url'  =>  route('checkout.verify-payment'),
                     'channels'      =>  ['card', 'bank', 'bank_transfer']
                 ]);
@@ -78,10 +78,10 @@ class PayStackService
         return false;
     }
 
-    public static function initializeTransaction()
+    public static function initializeTransaction($data)
     {
-        $order = OrderService::createOrder();
-    
+        $order = OrderService::createOrder($data);
+        
         return PayStackTransaction::create([
             'reference_id'  => $order->order_id,
             'user_id'       => $order->user_id,
@@ -90,7 +90,7 @@ class PayStackService
             'currency'      => config('paystack.currency', 'NGN'),
             'meta'          => json_encode([
                 'order_id'      => $order->id,
-                'user_email'    => $order->user->email,
+                'user_email'    => $order->email,
                 'items'         => $order->orderItems->map(function ($item) {
                     return [
                         'id'       => $item->id,

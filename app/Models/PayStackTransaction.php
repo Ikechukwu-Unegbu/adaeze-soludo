@@ -14,7 +14,7 @@ class PayStackTransaction extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->user_id = Auth::id();
+            $model->user_id = Auth::id() ?? NULL;
            do {
                 $uuid = Str::uuid();
            } while(self::where('uuid', $uuid)->exists());
@@ -25,6 +25,11 @@ class PayStackTransaction extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 
     public function successful()

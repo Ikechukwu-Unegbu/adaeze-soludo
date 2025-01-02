@@ -14,7 +14,7 @@ class Order extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->user_id = Auth::id();
+            $model->user_id = Auth::id() ?? NULL;
            do {
                 $uuid = Str::uuid();
            } while(self::where('uuid', $uuid)->exists());

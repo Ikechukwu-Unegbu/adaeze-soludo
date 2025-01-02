@@ -49,33 +49,13 @@
                                                     {{ $order->payment->status ? 'Completed' : 'Failed' }}
                                                 </td>
                                                 {{-- <td class="border border-gray-300 px-4 py-2">
-                                <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</button>
-                              </td> --}}
+                                                    <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</button>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-
-
-                            <!-- Product Card -->
-                            {{-- @foreach ($products as $product)
-                     <div class="bg-white border rounded-lg shadow-lg overflow-hidden">
-                      <img src="{{$product->image_path}}" alt="Product A" class="w-full h-48 object-cover">
-                      <div class="p-4">
-                          <h3 class="text-lg font-semibold text-gray-800">{{$product->name}}</h3>
-                          <p class="text-sm text-gray-600">{{$product->description}}</p>
-                          <p class="text-lg font-medium text-gray-900 mt-2">NGN {{$product->price }}</p>
-                      </div>
-                      <div class="flex justify-between p-4 border-t">
-                          <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Edit</button>
-                          <a href="{{route('product.destroy', $product->id)}}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete</a>
-                      </div>
-                      </div>
-
-                     @endforeach  --}}
-
-
                             <!-- Add more cards as needed -->
                         </div>
                     </div>

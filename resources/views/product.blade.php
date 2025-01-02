@@ -12,9 +12,9 @@
             <h1 class="text-2xl font-bold text-gray-800">Backpack Co.</h1>
             <nav>
                 <ul class="hidden md:flex space-x-6 text-gray-600">
-                    <li><a href="index.html" class="hover:text-gray-800">Home</a></li>
-                    <li><a href="products.html" class="hover:text-gray-800">Products</a></li>
-                    <li><a href="contact.html" class="hover:text-gray-800">Contact</a></li>
+                    <li><a href="/" class="hover:text-gray-800">Home</a></li>
+                    <li><a href="{{ route('product.index') }}" class="hover:text-gray-800">Products</a></li>
+                    <li><a href="#" class="hover:text-gray-800">Contact</a></li>
                 </ul>
                 <button id="menu-btn" class="block md:hidden text-gray-800">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
@@ -24,9 +24,9 @@
             </nav>
         </div>
         <ul id="mobile-menu" class="hidden flex flex-col space-y-4 px-4 py-6 bg-white shadow-md md:hidden">
-            <li><a href="index.html" class="hover:text-gray-800">Home</a></li>
-            <li><a href="products.html" class="hover:text-gray-800">Products</a></li>
-            <li><a href="contact.html" class="hover:text-gray-800">Contact</a></li>
+            <li><a href="/" class="hover:text-gray-800">Home</a></li>
+            <li><a href="{{ route('product.index') }}" class="hover:text-gray-800">Products</a></li>
+            <li><a href="#" class="hover:text-gray-800">Contact</a></li>
         </ul>
     </header>
 
